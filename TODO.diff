@@ -1,0 +1,30 @@
+! HOW TO USE !
+
+This is general text
++ tasks marked with a '+' or '>' at the beginning of the line are complete
+- tasks marked with a '-' or '<' at the beginning of the line are incomplete
+# text marked with a '#' at the beginning of the line can be used to mark things as unchanged or deprecated
+use (), (()), or even ((())) if you want to emphasize something
+
+!! TODO !!
+-   implement player
+-       movement
+*           WASD or arrow keys, your choice
+-       shooting
+*           aiming towards mouse, fires a projectile from the player's position towards the mouse's position
+-       health
+*           injured by the zombie enemies
+-       sprite
+
+-   implement zombies
+-       movement
+*           just walks towards the player's position i guess
+-       attacking
+*           small wind-up before damage actually occurs, zombie stops moving as well to allow the player to evade
+-       sprite
+
+-   implement environment
+-       ground
+-       background
+
+-   implement menu screen (?)
