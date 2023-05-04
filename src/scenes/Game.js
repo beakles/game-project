@@ -8,6 +8,7 @@ class Game extends Phaser.Scene {
         this.load.image('backdrop', './assets/backdropUpscaled.png');
         this.load.image('road', './assets/roadUpscaled.png');
         this.load.image('mainCharacter', './assets/mainCharacterWithGunUpscaled.png');
+        this.load.image('tutorialDude', './assets/tutorial dude.png');
         this.load.image('gunBullet', './assets/gunBulletUpscaled.png');
         this.load.image('zombie', './assets/zombieRegularUpscaled.png');
         this.load.image('zombieDead', './assets/zombieRegularDeadUpscaled.png');
@@ -23,6 +24,7 @@ class Game extends Phaser.Scene {
         this.load.audio('playerDeath', './assets/playerDeath.wav');
         this.load.audio('zombieDeath', './assets/zombieDeath.wav');
         this.load.audio('zombieHit', './assets/zombieHit.wav');
+        this.load.audio('gunClick', './assets/click.wav');
     }
 
     checkCollision(object1, object2) {
@@ -54,6 +56,9 @@ class Game extends Phaser.Scene {
         this.healthText = this.add.text(config.width / 2, config.height / 4, "HEALTH: 0", healthTextConfig).setOrigin(0.5, 0.5);
 
         this.controlsText = this.add.text(config.width / 2, config.height / 8, "CONTROLS\nSPACEBAR -> SHOOT\nWASD -> MOVE", healthTextConfig).setOrigin(0.5, 0.5);
+
+        this.reloadText = this.add.text(config.width / 2, config.height / 3, "RELOADING", healthTextConfig).setOrigin(0.5, 0.5);
+        this.reloadText.visible = false;
 
         this.creaturePlayer = new Player(this, config.width - 50, config.height - (720 / 5.1), 'mainCharacter', 0).setOrigin(0.5, 0.5);
         // this.creatureZombie = new Zombie(this, 0 + 50, config.height - (720 / 5.1), 'zombie', 0).setOrigin(0.5, 0.5);
@@ -131,9 +136,15 @@ class Game extends Phaser.Scene {
         }
 
         if (Phaser.Input.Keyboard.JustDown(config.keybinds.keySpacebar)) {
-            let newBullet = new Bullet(this, globalVars.playerPositionX, globalVars.playerPositionY, 'gunBullet', 0, this.creaturePlayer.direction).setOrigin(0.5, 0.5);
-            this.bulletArray.push(newBullet);
-            this.sound.play('gunShoot');
+            if (this.bulletArray.length < 3) {
+                let newBullet = new Bullet(this, globalVars.playerPositionX, globalVars.playerPositionY, 'gunBullet', 0, this.creaturePlayer.direction).setOrigin(0.5, 0.5);
+                this.bulletArray.push(newBullet);
+                this.sound.play('gunShoot');
+                this.reloadText.visible = false;
+            } else {
+                this.reloadText.visible = true;
+                this.sound.play('gunClick');
+            }
         }
 
         for (let bulletArrayItem = 0; bulletArrayItem < this.bulletArray.length; bulletArrayItem++) {
@@ -171,6 +182,12 @@ class Game extends Phaser.Scene {
             }
             // console.log('bullet is in free space');
             currentBullet.update();
+        }
+
+        // despawn dead zombies based on amount
+        if (this.deadZombieArray.length > 15) {
+            this.deadZombieArray[0].destroy();
+            this.deadZombieArray.shift();
         }
     }
 }
