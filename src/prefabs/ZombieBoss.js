@@ -9,7 +9,8 @@ class ZombieBoss extends Phaser.GameObjects.Sprite {
             speed: 0.3,
             damage: 40,
             range: 120,
-            status: 'alive'
+            status: 'alive',
+            score: 5
         }
 
         this.animationTime = 0.0;

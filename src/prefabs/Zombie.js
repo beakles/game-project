@@ -9,7 +9,8 @@ class Zombie extends Phaser.GameObjects.Sprite {
             speed: 0.6,
             damage: 10,
             range: 50,
-            status: 'alive'
+            status: 'alive',
+            score: 1
         }
 
         this.animationTime = 0.0;

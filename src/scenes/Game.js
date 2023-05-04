@@ -52,6 +52,8 @@ class Game extends Phaser.Scene {
             },
             // fixedWidth: 100
         }
+        this.score = 0;
+        this.scoreText = this.add.text(config.width / 8, config.height / 8, "0", healthTextConfig).setOrigin(0.5, 0.5)
 
         this.healthText = this.add.text(config.width / 2, config.height / 4, "HEALTH: 0", healthTextConfig).setOrigin(0.5, 0.5);
 
@@ -90,6 +92,8 @@ class Game extends Phaser.Scene {
         // console.log(this.bulletArray, this.zombieArray, this.deadZombieArray);
 
         globalVars.gameDelta = delta;
+
+        this.scoreText.text = this.score;
 
         if (this.creaturePlayer.stats.health > 0) {
             this.healthText.text = `HEALTH: ${this.creaturePlayer.stats.health}`;
@@ -175,6 +179,7 @@ class Game extends Phaser.Scene {
                     } else if (currentZombie.stats.status == "dead") {
                         this.zombieArray.splice(zombieArrayItem, 1);
                         this.deadZombieArray.push(currentZombie);
+                        this.score += currentZombie.stats.score;
                         zombieArrayItem = 0;
                         break;
                     }
