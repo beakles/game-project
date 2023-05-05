@@ -92,6 +92,13 @@ class Game extends Phaser.Scene {
         // console.log(this.bulletArray, this.zombieArray, this.deadZombieArray);
 
         // globalVars.gameDelta = delta;
+        /*
+        time = now()
+        delta = time - previousTime
+        previousTime = time
+        fps = 1000 / delta
+        increment = 60 / fps
+        */
 
         globalVars.gameDelta = 1000 / delta;
 
