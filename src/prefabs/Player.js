@@ -6,7 +6,7 @@ class Player extends Phaser.GameObjects.Sprite {
 
         this.stats = {
             health: 100,
-            speed: 150,
+            speed: 160,
             damage: 20,
             status: 'alive',
             magazineSize: 10

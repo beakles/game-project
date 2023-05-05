@@ -95,6 +95,8 @@ class Game extends Phaser.Scene {
 
         globalVars.gameDelta = 1000 / delta;
 
+        console.log(globalVars.gameDelta);
+
         this.scoreText.text = this.score;
 
         if (this.creaturePlayer.stats.health > 0) {
@@ -113,8 +115,6 @@ class Game extends Phaser.Scene {
         }
 
         this.zombieSpawnTimer += config.gameSpeed / globalVars.gameDelta;
-
-        console.log(this.zombieSpawnTimer);
 
         if (this.zombieSpawnTimer >= this.zombieSpawnDelay) {
             this.zombieSpawnTimer = 0;

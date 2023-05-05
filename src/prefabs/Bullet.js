@@ -5,7 +5,7 @@ class Bullet extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);
 
         this.settings = {
-            speed: 600
+            speed: 800
         }
 
         this.direction = direction;

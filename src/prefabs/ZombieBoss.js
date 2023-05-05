@@ -97,7 +97,7 @@ class ZombieBoss extends Phaser.GameObjects.Sprite {
         } else if (this.stats.status == 'attacking') {
             this.animationTime += (config.gameSpeed / globalVars.gameDelta);
             this.attackDebounce = true;
-            if (this.animationTime > 1.5) {
+            if (this.animationTime > 2) {
                 this.animationTime = 0;
                 this.attackDebounce = false;
             } else if (this.animationTime > 1) {
