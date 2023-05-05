@@ -6,7 +6,7 @@ class Player extends Phaser.GameObjects.Sprite {
 
         this.stats = {
             health: 100,
-            speed: 1.5,
+            speed: 150,
             damage: 20,
             status: 'alive',
             magazineSize: 10
@@ -33,16 +33,16 @@ class Player extends Phaser.GameObjects.Sprite {
         globalVars.playerPositionY = this.y;
 
         if (config.keybinds.keyW.isDown) {
-            this.y -= this.stats.speed / 2;
+            this.y -= this.stats.speed / 2 * (config.gameSpeed / globalVars.gameDelta);
         }
         if (config.keybinds.keyA.isDown) {
-            this.x -= this.stats.speed;
+            this.x -= this.stats.speed * (config.gameSpeed / globalVars.gameDelta);
         }
         if (config.keybinds.keyS.isDown) {
-            this.y += this.stats.speed / 2;
+            this.y += this.stats.speed / 2 * (config.gameSpeed / globalVars.gameDelta);
         }
         if (config.keybinds.keyD.isDown) {
-            this.x += this.stats.speed;
+            this.x += this.stats.speed * (config.gameSpeed / globalVars.gameDelta);
         }
 
         this.deltaPositionX = this.x - globalVars.playerPositionX;

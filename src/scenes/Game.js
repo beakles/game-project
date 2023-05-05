@@ -81,7 +81,7 @@ class Game extends Phaser.Scene {
         // this.zombieArray.push(this.creatureZombie2);
         // this.zombieArray.push(this.creatureZombie3);
 
-        this.zombieSpawnDelay = 2;
+        this.zombieSpawnDelay = 3;
         this.zombieSpawnTimer = 0;
     }
 
@@ -91,7 +91,9 @@ class Game extends Phaser.Scene {
 
         // console.log(this.bulletArray, this.zombieArray, this.deadZombieArray);
 
-        globalVars.gameDelta = delta;
+        // globalVars.gameDelta = delta;
+
+        globalVars.gameDelta = 1000 / delta;
 
         this.scoreText.text = this.score;
 
@@ -110,7 +112,10 @@ class Game extends Phaser.Scene {
             return;
         }
 
-        this.zombieSpawnTimer += config.framerate / 1000 / delta;
+        this.zombieSpawnTimer += config.gameSpeed / globalVars.gameDelta;
+
+        console.log(this.zombieSpawnTimer);
+
         if (this.zombieSpawnTimer >= this.zombieSpawnDelay) {
             this.zombieSpawnTimer = 0;
             let newZombie = null;

@@ -1,6 +1,6 @@
 let config = {
     type: Phaser.AUTO,
-    framerate: 60,
+    gameSpeed: 1,
     width: 1280,
     height: 800,
     scene: [ Game ], // put the name of the game scenes here

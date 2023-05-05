@@ -6,7 +6,7 @@ class Zombie extends Phaser.GameObjects.Sprite {
 
         this.stats = {
             health: 100,
-            speed: 0.6,
+            speed: 60,
             damage: 10,
             range: 50,
             status: 'alive',
@@ -50,16 +50,16 @@ class Zombie extends Phaser.GameObjects.Sprite {
             }
 
             if (this.savedPlayerPositionY < this.y && this.canMoveOnY) {
-                this.y -= this.stats.speed / 2;
+                this.y -= this.stats.speed / 2 * (config.gameSpeed / globalVars.gameDelta);
             }
             if (this.savedPlayerPositionX < this.x) {
-                this.x -= this.stats.speed;
+                this.x -= this.stats.speed * (config.gameSpeed / globalVars.gameDelta);
             }
             if (this.savedPlayerPositionY > this.y && this.canMoveOnY) {
-                this.y += this.stats.speed / 2;
+                this.y += this.stats.speed / 2 * (config.gameSpeed / globalVars.gameDelta);
             }
             if (this.savedPlayerPositionX > this.x) {
-                this.x += this.stats.speed;
+                this.x += this.stats.speed * (config.gameSpeed / globalVars.gameDelta);
             }
 
             this.deltaPositionX = this.x - this.savedPlayerPositionX;
@@ -95,7 +95,7 @@ class Zombie extends Phaser.GameObjects.Sprite {
 
             this.setTexture('zombie');
         } else if (this.stats.status == 'attacking') {
-            this.animationTime += config.framerate / 1000 / globalVars.gameDelta;
+            this.animationTime += (config.gameSpeed / globalVars.gameDelta);
             this.attackDebounce = true;
             if (this.animationTime > 1) {
                 this.animationTime = 0;
