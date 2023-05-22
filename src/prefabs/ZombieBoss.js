@@ -6,7 +6,7 @@ class ZombieBoss extends Phaser.GameObjects.Sprite {
 
         this.stats = {
             health: 300,
-            speed: 30,
+            speed: 60,
             damage: 40,
             range: 120,
             status: 'alive',

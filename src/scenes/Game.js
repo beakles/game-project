@@ -81,8 +81,10 @@ class Game extends Phaser.Scene {
         // this.zombieArray.push(this.creatureZombie2);
         // this.zombieArray.push(this.creatureZombie3);
 
-        this.zombieSpawnDelay = 3;
+        this.zombieSpawnDelay = 2;
         this.zombieSpawnTimer = 0;
+        this.difficultyTimer = 0;
+        this.bossChance = 3;
     }
 
     // things in the scene that need to be updated every frame
@@ -102,7 +104,7 @@ class Game extends Phaser.Scene {
 
         globalVars.gameDelta = 1000 / delta;
 
-        console.log(globalVars.gameDelta);
+        // console.log(globalVars.gameDelta);
 
         this.scoreText.text = this.score;
 
@@ -122,11 +124,20 @@ class Game extends Phaser.Scene {
         }
 
         this.zombieSpawnTimer += config.gameSpeed / globalVars.gameDelta;
+        this.difficultyTimer += config.gameSpeed / globalVars.gameDelta;
+        // console.log(this.zombieSpawnTimer);
+
+        if (this.difficultyTimer >= 30 && this.zombieSpawnDelay > 0.61) {
+            this.difficultyTimer = 0;
+            this.zombieSpawnDelay -= 0.2;
+            this.bossChance += 1;
+            // console.log(this.zombieSpawnDelay, this.bossChance);
+        }
 
         if (this.zombieSpawnTimer >= this.zombieSpawnDelay) {
             this.zombieSpawnTimer = 0;
             let newZombie = null;
-            if (Phaser.Math.Between(1, 10) == 1) {
+            if (Phaser.Math.Between(1, this.bossChance) == 1) {
                 newZombie = new ZombieBoss(this, 0 + 50, config.height - (720 / 5.1) + Phaser.Math.Between(-100, 100), 'zombieBoss', 0).setOrigin(0.5, 0.5);
             } else {
                 newZombie = new Zombie(this, 0 + 50, config.height - (720 / 5.1) + Phaser.Math.Between(-100, 100), 'zombie', 0).setOrigin(0.5, 0.5);
