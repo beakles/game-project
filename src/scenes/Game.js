@@ -74,8 +74,9 @@ class Game extends Phaser.Scene {
             // fixedWidth: 100
         }
         this.score = 0;
-        this.scoreText = this.add.text(config.width / 8, config.height / 8, "0", healthTextConfig).setOrigin(0.5, 0.5)
-
+        this.scoreText = this.add.text(config.width / 8, config.height / 12, "0", healthTextConfig).setOrigin(0.5, 0.5);
+        this.masterMode = this.add.text(config.width / 8, config.height / 6, "MASTER MODE", healthTextConfig).setOrigin(0.5, 0.5);
+        this.masterMode.visible = false;
         this.healthText = this.add.text(config.width / 2, config.height / 4, "HEALTH: 0", healthTextConfig).setOrigin(0.5, 0.5);
 
         this.buffText = this.add.text(config.width - 200, config.height / 3, "BUFF ACQUIRED:\nnull", healthTextConfig).setOrigin(0.5, 0.5);
@@ -167,11 +168,22 @@ class Game extends Phaser.Scene {
 
         this.buffSpawnTimer += config.gameSpeed / globalVars.gameDelta;
 
-        if (this.difficultyTimer >= 30 && this.zombieSpawnDelay > 0.61) {
+        if (this.difficultyTimer >= 25 && this.zombieSpawnDelay > 0.61) {
             this.difficultyTimer = 0;
             this.zombieSpawnDelay -= 0.2;
-            this.bossChance += 1;
-            // console.log(this.zombieSpawnDelay, this.bossChance);
+            if (this.zombieSpawnDelay < 1.61 && this.bossChance >= 6) {
+                this.bossChance -= 1;
+            } else if (this.zombieSpawnDelay > 1.61) {
+                this.bossChance += 1;
+            }
+            console.log(this.zombieSpawnDelay, this.bossChance);
+        }
+
+        if (this.difficultyTimer >= 25 && this.score >= 500 && this.zombieSpawnDelay > 0.11) {
+            this.difficultyTimer = 0;
+            this.zombieSpawnDelay -= 0.05;
+            this.masterMode.visible = true;
+            console.log(this.zombieSpawnDelay, this.bossChance);
         }
 
         if (this.zombieSpawnTimer >= this.zombieSpawnDelay) {
@@ -253,7 +265,7 @@ class Game extends Phaser.Scene {
                     }
                     this.buffText.text = 'BUFF ACQUIRED:\nLIGHTNING STRIKE';
                 } else if (currentBuff.type == 'speed') {
-                    this.creaturePlayer.stats.speed += 5;
+                    this.creaturePlayer.stats.speed += 20;
                     this.buffText.text = 'BUFF ACQUIRED:\nSPEED INCREASE';
                 }
                 this.buffArray.splice(buffArrayItem, 1);
@@ -268,11 +280,15 @@ class Game extends Phaser.Scene {
                 let newBullet = new Bullet(this, globalVars.playerPositionX, globalVars.playerPositionY, 'gunBullet', 0, this.creaturePlayer.direction).setOrigin(0.5, 0.5);
                 this.bulletArray.push(newBullet);
                 this.sound.play('gunShoot');
-                this.reloadText.visible = false;
             } else {
-                this.reloadText.visible = true;
                 this.sound.play('gunClick');
             }
+        }
+
+        if (this.bulletArray.length >= 3) {
+            this.reloadText.visible = true;
+        } else {
+            this.reloadText.visible = false;
         }
 
         for (let bulletArrayItem = 0; bulletArrayItem < this.bulletArray.length; bulletArrayItem++) {
