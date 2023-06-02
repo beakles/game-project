@@ -74,10 +74,10 @@ class Game extends Phaser.Scene {
             // fixedWidth: 100
         }
         this.score = 0;
-        this.scoreText = this.add.text(config.width / 8, config.height / 12, "0", healthTextConfig).setOrigin(0.5, 0.5);
+        this.scoreText = this.add.text(config.width / 8, config.height / 12, "SCORE: 0", healthTextConfig).setOrigin(0.5, 0.5);
         this.masterMode = this.add.text(config.width / 8, config.height / 6, "MASTER MODE", healthTextConfig).setOrigin(0.5, 0.5);
         this.masterMode.visible = false;
-        this.healthText = this.add.text(config.width / 2, config.height / 4, "HEALTH: 0", healthTextConfig).setOrigin(0.5, 0.5);
+        // this.healthText = this.add.text(config.width / 2, config.height / 4, "HEALTH: 0", healthTextConfig).setOrigin(0.5, 0.5);
 
         this.buffText = this.add.text(config.width - 200, config.height / 3, "BUFF ACQUIRED:\nnull", healthTextConfig).setOrigin(0.5, 0.5);
         this.buffText.alpha = 0;
@@ -92,6 +92,8 @@ class Game extends Phaser.Scene {
         // this.creatureZombie2 = new Zombie(this, 0 + 50, config.height - (720 / 5.1) - 50, 'zombie', 0).setOrigin(0.5, 0.5);
         // this.creatureZombie3 = new Zombie(this, 0 + 50, config.height - (720 / 5.1) + 50, 'zombie', 0).setOrigin(0.5, 0.5);
 
+        this.statsText = this.add.text(config.width / 2, config.height / 4, 'HP: ' + this.creaturePlayer.stats.health + ' MSPD: ' + this.creaturePlayer.stats.speed + ' DMG: ' + this.creaturePlayer.stats.damage, healthTextConfig).setOrigin(0.5, 0.5);
+        
         config.keybinds.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         config.keybinds.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         config.keybinds.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
@@ -138,12 +140,8 @@ class Game extends Phaser.Scene {
 
         // console.log(globalVars.gameDelta);
 
-        this.scoreText.text = this.score;
-
-        if (this.creaturePlayer.stats.health > 0) {
-            this.healthText.text = `HEALTH: ${this.creaturePlayer.stats.health}`;
-        } else {
-            this.healthText.text = `YOU HAVE DIED. PRESS (R) TO RESTART`;
+        if (this.creaturePlayer.stats.health <= 0) {
+            this.statsText.text = `YOU HAVE DIED. PRESS (R) TO RESTART`;
         }
 
         if (this.buffTextTimer > 0) {
@@ -226,6 +224,7 @@ class Game extends Phaser.Scene {
                 currentZombie.hitboxEnabled = false;
                 currentZombie.hitTarget = true;
                 this.creaturePlayer.stats.health -= currentZombie.stats.damage;
+                this.statsText.text = 'HP: ' + this.creaturePlayer.stats.health + ' MSPD: ' + this.creaturePlayer.stats.speed + ' DMG: ' + this.creaturePlayer.stats.damage;
                 if (this.creaturePlayer.stats.health > 0) {
                     this.sound.play('playerHit');
                 } else {
@@ -242,9 +241,11 @@ class Game extends Phaser.Scene {
                 this.buffTextTimer = 5;
                 if (currentBuff.type == 'damage') {
                     this.creaturePlayer.stats.damage += 5;
+                    this.statsText.text = 'HP: ' + this.creaturePlayer.stats.health + ' MSPD: ' + this.creaturePlayer.stats.speed + ' DMG: ' + this.creaturePlayer.stats.damage;
                     this.buffText.text = 'BUFF ACQUIRED:\nDAMAGE INCREASE';
                 } else if (currentBuff.type == 'health') {
                     this.creaturePlayer.stats.health += 20;
+                    this.statsText.text = 'HP: ' + this.creaturePlayer.stats.health + ' MSPD: ' + this.creaturePlayer.stats.speed + ' DMG: ' + this.creaturePlayer.stats.damage;
                     this.buffText.text = 'BUFF ACQUIRED:\nHEALTH INCREASE';
                 } else if (currentBuff.type == 'lightning') {
                     for (let zombieArrayItem = 0; zombieArrayItem < this.zombieArray.length; zombieArrayItem++) {
@@ -266,6 +267,7 @@ class Game extends Phaser.Scene {
                     this.buffText.text = 'BUFF ACQUIRED:\nLIGHTNING STRIKE';
                 } else if (currentBuff.type == 'speed') {
                     this.creaturePlayer.stats.speed += 20;
+                    this.statsText.text = 'HP: ' + this.creaturePlayer.stats.health + ' MSPD: ' + this.creaturePlayer.stats.speed + ' DMG: ' + this.creaturePlayer.stats.damage;
                     this.buffText.text = 'BUFF ACQUIRED:\nSPEED INCREASE';
                 }
                 this.buffArray.splice(buffArrayItem, 1);
@@ -330,9 +332,11 @@ class Game extends Phaser.Scene {
         }
 
         // despawn dead zombies based on amount
-        if (this.deadZombieArray.length > 15) {
+        if (this.deadZombieArray.length > 8) {
             this.deadZombieArray[0].destroy();
             this.deadZombieArray.shift();
         }
+
+        this.scoreText.text = 'SCORE:' + this.score;
     }
 }
