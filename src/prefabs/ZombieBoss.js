@@ -6,7 +6,7 @@ class ZombieBoss extends Phaser.GameObjects.Sprite {
 
         this.stats = {
             health: 300,
-            speed: 30,
+            speed: 60,
             damage: 40,
             range: 120,
             status: 'alive',
@@ -19,6 +19,8 @@ class ZombieBoss extends Phaser.GameObjects.Sprite {
         this.hitTarget = false;
         this.inRange = false;
         this.canMoveOnY = false;
+
+        this.corpseDespawnTimer = 0;
 
         this.savedPlayerPositionX = globalVars.playerPositionX;
         this.savedPlayerPositionY = globalVars.playerPositionY;
@@ -114,6 +116,14 @@ class ZombieBoss extends Phaser.GameObjects.Sprite {
             }
         } else if (this.stats.status == 'dead') {
             this.animationTime = 0;
+
+            this.corpseDespawnTimer += config.gameSpeed / globalVars.gameDelta;
+
+            if (this.corpseDespawnTimer > 3) {
+                this.alpha = 1 - (this.corpseDespawnTimer - 3);
+            } else {
+                this.alpha = 1;
+            }
 
             this.setTexture('zombieBossDead');
         }
