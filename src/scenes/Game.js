@@ -234,6 +234,11 @@ class Game extends Phaser.Scene {
             currentZombie.update();
         }
 
+        for (let zombieDeadArrayItem = 0; zombieDeadArrayItem < this.deadZombieArray.length; zombieDeadArrayItem += 1) {
+            let currentZombie = this.deadZombieArray[zombieDeadArrayItem];
+            currentZombie.update();
+        }
+
         for (let buffArrayItem = 0; buffArrayItem < this.buffArray.length; buffArrayItem++) {
             let currentBuff = this.buffArray[buffArrayItem];
             if (this.checkBuffCollision(currentBuff, this.creaturePlayer)) {

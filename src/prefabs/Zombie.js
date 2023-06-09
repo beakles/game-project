@@ -20,6 +20,8 @@ class Zombie extends Phaser.GameObjects.Sprite {
         this.inRange = false;
         this.canMoveOnY = false;
 
+        this.corpseDespawnTimer = 0;
+
         this.savedPlayerPositionX = globalVars.playerPositionX;
         this.savedPlayerPositionY = globalVars.playerPositionY;
     }
@@ -114,6 +116,14 @@ class Zombie extends Phaser.GameObjects.Sprite {
             }
         } else if (this.stats.status == 'dead') {
             this.animationTime = 0;
+
+            this.corpseDespawnTimer += config.gameSpeed / globalVars.gameDelta;
+
+            if (this.corpseDespawnTimer > 3) {
+                this.alpha = 1 - (this.corpseDespawnTimer - 3);
+            } else {
+                this.alpha = 1;
+            }
 
             this.setTexture('zombieDead');
         }
