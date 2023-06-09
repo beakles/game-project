@@ -57,6 +57,16 @@ class Game extends Phaser.Scene {
 
         this.healthText = this.add.text(config.width / 2, config.height / 4, "HEALTH: 0", healthTextConfig).setOrigin(0.5, 0.5);
 
+        // Create the health bar
+        let barWidth = 200;
+        let barHeight = 30;
+        let barX = config.width - 10 - barWidth;
+        let barY = 50;
+
+        this.healthBar = this.add.graphics().setDepth(1);
+        this.healthBar.fillStyle(0x00ff00, 1);
+        this.healthBar.fillRect(barX, barY, barWidth, barHeight);
+
         this.controlsText = this.add.text(config.width / 2, config.height / 8, "CONTROLS\nSPACEBAR -> SHOOT\nWASD -> MOVE", healthTextConfig).setOrigin(0.5, 0.5);
 
         this.reloadText = this.add.text(config.width / 2, config.height / 3, "RELOADING", healthTextConfig).setOrigin(0.5, 0.5);
@@ -105,6 +115,34 @@ class Game extends Phaser.Scene {
         console.log(globalVars.gameDelta);
 
         this.scoreText.text = this.score;
+
+        let barWidth = 200;
+        let barHeight = 30;
+        let barX = config.width - 10 - barWidth;
+        let barY = 50;
+
+        if (this.creaturePlayer.stats.health > 0) {
+            // Update the health text
+            this.healthText.text = `HEALTH: ${this.creaturePlayer.stats.health}`;
+    
+            // Update the health bar
+            let healthRatio = this.creaturePlayer.stats.health / 100;
+            this.healthBar.fillStyle(0x00ff00, 1);
+
+            // Clear the bar by filling it with the background color
+            this.healthBar.fillStyle(0x000000, 1);
+            this.healthBar.fillRect(barX, barY, barWidth, barHeight);
+
+            // Draw the new bar
+            this.healthBar.fillStyle(0x00ff00, 1);
+            this.healthBar.fillRect(barX, barY, barWidth * healthRatio, barHeight);
+            
+        } else {
+            // Reset the health bar to Black
+            this.healthBar.fillStyle(0x000000, 1);
+            this.healthBar.fillRect(barX, barY, barWidth, barHeight);
+            this.healthText.text = `YOU HAVE DIED. PRESS (R) TO RESTART`;
+        }
 
         if (this.creaturePlayer.stats.health > 0) {
             this.healthText.text = `HEALTH: ${this.creaturePlayer.stats.health}`;
