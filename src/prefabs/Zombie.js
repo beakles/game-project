@@ -24,13 +24,34 @@ class Zombie extends Phaser.GameObjects.Sprite {
 
         this.savedPlayerPositionX = globalVars.playerPositionX;
         this.savedPlayerPositionY = globalVars.playerPositionY;
+        this.healthBar = this.scene.add.graphics();
     }
 
+    drawHealthBar() {
+        // Clear any existing graphics
+        this.healthBar.clear();
+    
+        // Calculate the width of the health bar based on the zombie's health
+        let healthBarWidth = 50 * (this.stats.health / 100);
+    
+        // If the zombie is alive, draw the health bar
+        if (this.stats.status !== 'dead') {
+            this.healthBar.fillStyle(0xff0000);  // color of the health bar
+            this.healthBar.fillRect(this.x - 27, this.y - 50, healthBarWidth, 5); // x, y, width, height
+        }
+    }
+    
+    updateHealthBar() {
+        // Clear any existing graphics and redraw the health bar
+        this.drawHealthBar();
+    }
+    
     checkInRange() {
         return Math.abs(this.x - this.savedPlayerPositionX) < this.stats.range && Math.abs(this.y - this.savedPlayerPositionY) < this.stats.range / 2;
     }
 
     update() {
+        this.updateHealthBar();
         this.depth = this.y + (this.height / 2);
 
         this.savedPlayerPositionX = globalVars.playerPositionX;

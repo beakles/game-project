@@ -135,12 +135,14 @@ class Game extends Phaser.Scene {
         fps = 1000 / delta
         increment = 60 / fps
         */
-
         globalVars.gameDelta = 1000 / delta;
 
         // console.log(globalVars.gameDelta);
 
+
         if (this.creaturePlayer.stats.health <= 0) {
+            // Rotate the player sprite to be dead on the floor
+            this.creaturePlayer.setAngle(90);
             this.statsText.text = `YOU HAVE DIED. PRESS (R) TO RESTART`;
         }
 
@@ -224,6 +226,10 @@ class Game extends Phaser.Scene {
                 currentZombie.hitboxEnabled = false;
                 currentZombie.hitTarget = true;
                 this.creaturePlayer.stats.health -= currentZombie.stats.damage;
+                this.creaturePlayer.setTint(0xff0000);
+                setTimeout(() => {
+                    this.creaturePlayer.clearTint();
+                }, 500); // player will turn red for .5 seconds
                 this.statsText.text = 'HP: ' + this.creaturePlayer.stats.health + ' MSPD: ' + this.creaturePlayer.stats.speed + ' DMG: ' + this.creaturePlayer.stats.damage;
                 if (this.creaturePlayer.stats.health > 0) {
                     this.sound.play('playerHit');
