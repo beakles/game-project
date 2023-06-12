@@ -3,7 +3,7 @@ let config = {
     gameSpeed: 1,
     width: 1280,
     height: 800,
-    scene: [ Game ], // put the name of the game scenes here
+    scene: [ Menu, Game ], // put the name of the game scenes here
     keybinds: {
         keyW: null,
         keyA: null,

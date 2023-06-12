@@ -62,12 +62,12 @@ class Game extends Phaser.Scene {
         this.cityRoad.scaleY = 1 / 3.5;
 
         let healthTextConfig = {
-                fontFamily: 'Courier',
-                fontSize: '40px',
-                backgroundColor: '#FFFF00',
-                color: '#202020',
-                align: 'center',
-                padding: {
+            fontFamily: 'Courier',
+            fontSize: '40px',
+            backgroundColor: '#FFFF00',
+            color: '#202020',
+            align: 'center',
+            padding: {
                 top: 5,
                 bottom: 5,
             },
@@ -77,6 +77,8 @@ class Game extends Phaser.Scene {
         this.scoreText = this.add.text(config.width / 8, config.height / 12, "SCORE: 0", healthTextConfig).setOrigin(0.5, 0.5);
         this.masterMode = this.add.text(config.width / 8, config.height / 6, "MASTER MODE", healthTextConfig).setOrigin(0.5, 0.5);
         this.masterMode.visible = false;
+        this.difficultyText = this.add.text(config.width - 200, config.height / 12, "DIFFICULTY\nINCREASED!", healthTextConfig).setOrigin(0.5, 0.5);
+        this.difficultyText.visible = false;
         // this.healthText = this.add.text(config.width / 2, config.height / 4, "HEALTH: 0", healthTextConfig).setOrigin(0.5, 0.5);
 
         this.buffText = this.add.text(config.width - 200, config.height / 3, "BUFF ACQUIRED:\nnull", healthTextConfig).setOrigin(0.5, 0.5);
@@ -92,14 +94,14 @@ class Game extends Phaser.Scene {
         // this.creatureZombie2 = new Zombie(this, 0 + 50, config.height - (720 / 5.1) - 50, 'zombie', 0).setOrigin(0.5, 0.5);
         // this.creatureZombie3 = new Zombie(this, 0 + 50, config.height - (720 / 5.1) + 50, 'zombie', 0).setOrigin(0.5, 0.5);
 
-        this.statsText = this.add.text(config.width / 2, config.height / 4, 'HP: ' + this.creaturePlayer.stats.health + ' MSPD: ' + this.creaturePlayer.stats.speed + ' DMG: ' + this.creaturePlayer.stats.damage, healthTextConfig).setOrigin(0.5, 0.5);
+        this.statsText = this.add.text(config.width / 2, config.height / 4, 'HEALTH: ' + this.creaturePlayer.stats.health + ' GUN DAMAGE: ' + this.creaturePlayer.stats.damage + '\nMOVE SPEED: ' + this.creaturePlayer.stats.speed, healthTextConfig).setOrigin(0.5, 0.5);
         
         config.keybinds.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         config.keybinds.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         config.keybinds.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         config.keybinds.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        config.keybinds.keySpacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
-        config.keybinds.keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
+        config.keybinds.keySpacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        config.keybinds.keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
         this.bulletArray = [];
         this.zombieArray = [];
@@ -112,6 +114,7 @@ class Game extends Phaser.Scene {
         this.zombieSpawnDelay = 3;
         this.zombieSpawnTimer = 0;
         this.difficultyTimer = 0;
+        this.difficultyTextTimer = 0;
         this.bossChance = 3;
 
         this.buffSpawnTimer = 0;
@@ -153,6 +156,13 @@ class Game extends Phaser.Scene {
             this.buffText.alpha = 0;
         }
 
+        if (this.difficultyTextTimer > 0) {
+            this.difficultyTextTimer -= config.gameSpeed / globalVars.gameDelta;
+            this.difficultyText.visible = true;
+        } else {
+            this.difficultyText.visible = false;
+        }
+
         if (Phaser.Input.Keyboard.JustDown(config.keybinds.keyR)) {
             this.creaturePlayer.stats.health = 100;
             this.scene.restart();
@@ -177,6 +187,7 @@ class Game extends Phaser.Scene {
                 this.bossChance += 1;
             }
             console.log(this.zombieSpawnDelay, this.bossChance);
+            this.difficultyTextTimer += 5;
         }
 
         if (this.difficultyTimer >= 25 && this.score >= 500 && this.zombieSpawnDelay > 0.11) {
@@ -184,6 +195,7 @@ class Game extends Phaser.Scene {
             this.zombieSpawnDelay -= 0.05;
             this.masterMode.visible = true;
             console.log(this.zombieSpawnDelay, this.bossChance);
+            this.difficultyTextTimer += 5;
         }
 
         if (this.zombieSpawnTimer >= this.zombieSpawnDelay) {
@@ -230,7 +242,7 @@ class Game extends Phaser.Scene {
                 setTimeout(() => {
                     this.creaturePlayer.clearTint();
                 }, 500); // player will turn red for .5 seconds
-                this.statsText.text = 'HP: ' + this.creaturePlayer.stats.health + ' MSPD: ' + this.creaturePlayer.stats.speed + ' DMG: ' + this.creaturePlayer.stats.damage;
+                this.statsText.text = 'HEALTH: ' + this.creaturePlayer.stats.health + ' GUN DAMAGE: ' + this.creaturePlayer.stats.damage + '\nMOVE SPEED: ' + this.creaturePlayer.stats.speed;
                 if (this.creaturePlayer.stats.health > 0) {
                     this.sound.play('playerHit');
                 } else {
@@ -252,11 +264,11 @@ class Game extends Phaser.Scene {
                 this.buffTextTimer = 5;
                 if (currentBuff.type == 'damage') {
                     this.creaturePlayer.stats.damage += 5;
-                    this.statsText.text = 'HP: ' + this.creaturePlayer.stats.health + ' MSPD: ' + this.creaturePlayer.stats.speed + ' DMG: ' + this.creaturePlayer.stats.damage;
+                    this.statsText.text = 'HEALTH: ' + this.creaturePlayer.stats.health + ' GUN DAMAGE: ' + this.creaturePlayer.stats.damage + '\nMOVE SPEED: ' + this.creaturePlayer.stats.speed;
                     this.buffText.text = 'BUFF ACQUIRED:\nDAMAGE INCREASE';
                 } else if (currentBuff.type == 'health') {
                     this.creaturePlayer.stats.health += 20;
-                    this.statsText.text = 'HP: ' + this.creaturePlayer.stats.health + ' MSPD: ' + this.creaturePlayer.stats.speed + ' DMG: ' + this.creaturePlayer.stats.damage;
+                    this.statsText.text = 'HEALTH: ' + this.creaturePlayer.stats.health + ' GUN DAMAGE: ' + this.creaturePlayer.stats.damage + '\nMOVE SPEED: ' + this.creaturePlayer.stats.speed;
                     this.buffText.text = 'BUFF ACQUIRED:\nHEALTH INCREASE';
                 } else if (currentBuff.type == 'lightning') {
                     for (let zombieArrayItem = 0; zombieArrayItem < this.zombieArray.length; zombieArrayItem++) {
@@ -278,7 +290,7 @@ class Game extends Phaser.Scene {
                     this.buffText.text = 'BUFF ACQUIRED:\nLIGHTNING STRIKE';
                 } else if (currentBuff.type == 'speed') {
                     this.creaturePlayer.stats.speed += 20;
-                    this.statsText.text = 'HP: ' + this.creaturePlayer.stats.health + ' MSPD: ' + this.creaturePlayer.stats.speed + ' DMG: ' + this.creaturePlayer.stats.damage;
+                    this.statsText.text = 'HEALTH: ' + this.creaturePlayer.stats.health + ' GUN DAMAGE: ' + this.creaturePlayer.stats.damage + '\nMOVE SPEED: ' + this.creaturePlayer.stats.speed;
                     this.buffText.text = 'BUFF ACQUIRED:\nSPEED INCREASE';
                 }
                 this.buffArray.splice(buffArrayItem, 1);
